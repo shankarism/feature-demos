@@ -254,14 +254,12 @@ a:hover {
   background: rgba(100, 200, 189, 0.18);
 }
 
-/* Dim + light blur; blur itself is not animated (that was the lag) */
+/* Dim page while ToC is open — solid brand-tint overlay, no blur */
 .toc-backdrop {
   position: fixed;
   inset: 0;
   z-index: 90;
-  background: rgba(34, 51, 59, 0.28);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: color-mix(in srgb, var(--slate-100) 55%, transparent);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
