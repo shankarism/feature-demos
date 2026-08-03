@@ -30,7 +30,6 @@ Hero headline: <one line>
 Lead / short description: <one or two sentences>
 Prepared by: <Your Name>
 Email: <you@sitetracker.com>
-Prepared for: Customers
 Prepared on: <today’s date>
 
 Sections and videos:
@@ -92,7 +91,7 @@ Open `demos/my-feature-name/content.md`. Replace the template with your feature 
 | `title` | Short name on the hub card |
 | `headline` | Large hero text on the demo page |
 | `lead` | One supporting sentence under the headline |
-| `preparedBy` / `email` / `preparedFor` / `preparedOn` | Hero byline |
+| `preparedBy` / `email` / `preparedOn` | Hero byline |
 | `order` | Hub sort order (lower = higher). Optional; default is fine |
 
 **Body structure**
@@ -116,7 +115,6 @@ headline: One clear hero line about the feature
 lead: One short sentence on what this demo covers.
 preparedBy: Your Name
 email: you@sitetracker.com
-preparedFor: Customers
 preparedOn: August 3, 2026
 order: 10
 ---

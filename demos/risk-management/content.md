@@ -4,7 +4,6 @@ headline: Capture, track, and close risks in one place
 lead: Sitetracker Risk Management helps teams log risks early, keep owners and scores current, and turn mitigation into visible follow-through.
 preparedBy: Ravi S
 email: ravi.s@sitetracker.com
-preparedFor: Customers
 preparedOn: August 3, 2026
 order: 3
 ---

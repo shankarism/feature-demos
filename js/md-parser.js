@@ -213,7 +213,6 @@
       lead: meta.lead || "",
       preparedBy: meta.preparedBy || "",
       email: meta.email || "",
-      preparedFor: meta.preparedFor || "",
       preparedOn: meta.preparedOn || "",
       title: meta.title || meta.headline || "Demo",
       description: meta.description || meta.lead || "",

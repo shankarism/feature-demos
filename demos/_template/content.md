@@ -4,7 +4,6 @@ headline: Your feature headline goes here
 lead: One short sentence explaining what this demo covers.
 preparedBy: Your Name
 email: you@sitetracker.com
-preparedFor: Customers
 preparedOn: August 3, 2026
 order: 10
 ---

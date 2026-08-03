@@ -4,7 +4,6 @@ headline: Build schedules from activities, not guesswork
 lead: Activity Based Scheduling turns Enhanced Activities into a living project schedule - with dependencies, dates, and progress tied to the work itself.
 preparedBy: Ravi S
 email: ravi.s@sitetracker.com
-preparedFor: Customers
 preparedOn: August 3, 2026
 order: 2
 ---

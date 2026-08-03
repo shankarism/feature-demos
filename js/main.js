@@ -169,16 +169,6 @@
       }
     }
 
-    if (data.preparedFor) {
-      const item = document.getElementById("byline-for");
-      const value = document.getElementById("hero-prepared-for");
-      if (item && value) {
-        value.textContent = data.preparedFor;
-        item.hidden = false;
-        showByline = true;
-      }
-    }
-
     if (data.preparedOn) {
       const item = document.getElementById("byline-on");
       const value = document.getElementById("hero-prepared-on");

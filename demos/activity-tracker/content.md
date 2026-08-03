@@ -4,7 +4,6 @@ headline: Track activities across multiple projects in one grid
 lead: Convert a Project Tracker into an Activity Tracker to see Enhanced Activity fields grouped by Activity Template - with inline edit, filtering, and export.
 preparedBy: Ravi S
 email: ravi.s@sitetracker.com
-preparedFor: Customers
 preparedOn: August 3, 2026
 order: 1
 ---
