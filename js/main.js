@@ -1,5 +1,5 @@
 (function () {
-  const data = window.AT_DEMO;
+  let data = null;
   let lenis = null;
 
   function el(tag, attrs, children) {
@@ -19,23 +19,28 @@
     return node;
   }
 
+  function videoPath(video) {
+    const file = video.file || (video.id ? video.id + ".mp4" : "");
+    return "videos/" + file;
+  }
+
   function videoFrame(video) {
-    const videoPath = `videos/${video.id}.mp4`;
-    const frame = el("div", { className: "video-frame", "data-src": videoPath }, [
+    const path = videoPath(video);
+    const frame = el("div", { className: "video-frame", "data-src": path }, [
       el("video", {
         controls: true,
         preload: "none",
         playsinline: true,
-        src: videoPath,
+        src: path,
       }),
       el("div", { className: "video-frame__placeholder" }, [
         el("div", { className: "video-frame__play", "aria-hidden": "true" }),
         el("p", { className: "video-frame__soon", text: "Video coming soon" }),
-        el("p", { className: "video-frame__file", text: videoPath }),
+        el("p", { className: "video-frame__file", text: path }),
       ]),
     ]);
 
-    fetch(videoPath, { method: "HEAD" })
+    fetch(path, { method: "HEAD" })
       .then((res) => {
         const len = Number(res.headers.get("content-length") || 0);
         if (res.ok && len > 0) {
@@ -52,12 +57,12 @@
   function videoCopy(video) {
     return el("div", { className: "video-copy" }, [
       el("h3", { text: video.title }),
-      el("p", { className: "video-copy__time", text: video.time }),
+      video.time ? el("p", { className: "video-copy__time", text: video.time }) : null,
       el("p", { className: "video-copy__label", text: "What this video will show you" }),
       el(
         "ul",
         null,
-        video.learn.map((item) => el("li", { text: item }))
+        (video.learn || []).map((item) => el("li", { text: item }))
       ),
     ]);
   }
@@ -66,12 +71,12 @@
     return el("section", { className: "demo-section", id: section.id, "data-step": section.title }, [
       el("header", { className: "demo-section__intro" }, [
         el("h2", { className: "demo-section__title", text: section.title }),
-        el("p", { text: section.subtext }),
+        section.subtext ? el("p", { text: section.subtext }) : null,
       ]),
       el(
         "div",
         { className: "demo-section__rows" },
-        section.videos.map((video) =>
+        (section.videos || []).map((video) =>
           el("article", { className: "video-row", id: video.id }, [
             el("div", { className: "video-row__copy" }, [videoCopy(video)]),
             el("div", { className: "video-row__media" }, [videoFrame(video)]),
@@ -81,13 +86,81 @@
     ]);
   }
 
+  function mountHero() {
+    const headline = document.getElementById("hero-headline");
+    const lead = document.getElementById("hero-lead");
+    if (headline) headline.textContent = data.headline || data.title || "";
+    if (lead) {
+      lead.textContent = data.lead || "";
+      lead.hidden = !data.lead;
+    }
+
+    if (data.headline || data.title) {
+      document.title = (data.headline || data.title) + " - Sitetracker Demo";
+    }
+    if (data.description || data.lead) {
+      const meta = document.querySelector('meta[name="description"]');
+      if (meta) meta.setAttribute("content", data.description || data.lead);
+    }
+
+    const byline = document.getElementById("hero-byline");
+    let showByline = false;
+
+    if (data.preparedBy) {
+      const item = document.getElementById("byline-by");
+      const name = document.getElementById("hero-prepared-by");
+      if (item && name) {
+        name.textContent = data.preparedBy;
+        item.hidden = false;
+        showByline = true;
+      }
+      const mail = document.getElementById("hero-email");
+      if (mail && data.email) {
+        mail.href = "mailto:" + data.email;
+        mail.setAttribute("aria-label", "Email " + data.preparedBy);
+        mail.setAttribute("title", data.email);
+        mail.hidden = false;
+      }
+    }
+
+    if (data.preparedFor) {
+      const item = document.getElementById("byline-for");
+      const value = document.getElementById("hero-prepared-for");
+      if (item && value) {
+        value.textContent = data.preparedFor;
+        item.hidden = false;
+        showByline = true;
+      }
+    }
+
+    if (data.preparedOn) {
+      const item = document.getElementById("byline-on");
+      const value = document.getElementById("hero-prepared-on");
+      if (item && value) {
+        value.textContent = data.preparedOn;
+        item.hidden = false;
+        showByline = true;
+      }
+    }
+
+    if (byline) byline.hidden = !showByline;
+  }
+
   function mountDemo() {
     const root = document.getElementById("demo-root");
+    if (!root) return;
     data.sections.forEach((section) => root.appendChild(renderSection(section)));
   }
 
   function mountResources() {
+    const section = document.getElementById("resources");
     const list = document.getElementById("resource-list");
+    if (!section || !list) return;
+    if (!data.resources || !data.resources.length) {
+      section.hidden = true;
+      return;
+    }
+    section.hidden = false;
     data.resources.forEach((item) => {
       const urlText = item.href && item.href !== "#" ? item.href : item.display;
       list.appendChild(
@@ -103,16 +176,19 @@
 
   function mountStepNav() {
     const nav = document.getElementById("step-bar-nav");
+    const label = document.getElementById("step-bar-label");
+    if (!nav) return;
     data.sections.forEach((section) => {
       nav.appendChild(
         el("a", {
           className: "step-bar__link",
-          href: `#${section.id}`,
+          href: "#" + section.id,
           "data-section": section.id,
           text: section.title,
         })
       );
     });
+    if (label && data.sections[0]) label.textContent = data.sections[0].title;
   }
 
   function scrollToTarget(target) {
@@ -134,7 +210,7 @@
     const resources = document.getElementById("resources");
     const links = Array.from(document.querySelectorAll(".step-bar__link"));
 
-    if (!sections.length) return;
+    if (!chrome || !sections.length) return;
 
     function setMenuOpen(open) {
       toggle.setAttribute("aria-expanded", open ? "true" : "false");
@@ -177,11 +253,9 @@
         title: section.querySelector(".demo-section__title"),
       }));
 
-      // Threshold: top edge while bar hidden; bottom of chrome panel once visible
       const chromeVisible = chrome.classList.contains("is-visible");
       const threshold = chromeVisible ? chrome.offsetHeight : 0;
 
-      // Last section whose title has crossed the threshold
       let activeIndex = -1;
       titles.forEach((item, index) => {
         if (!item.title) return;
@@ -192,7 +266,8 @@
       const lastSection = sections[sections.length - 1];
       const lastBottom = lastSection.getBoundingClientRect().bottom;
       const pastDemo = lastBottom <= threshold + 8;
-      const resourcesTop = resources ? resources.getBoundingClientRect().top : Infinity;
+      const resourcesTop =
+        resources && !resources.hidden ? resources.getBoundingClientRect().top : Infinity;
       const inResources = resourcesTop <= threshold + 24;
 
       const shouldShow = activeIndex >= 0 && !pastDemo && !inResources;
@@ -211,14 +286,12 @@
         });
       }
 
-      // Page scroll progress
       const doc = document.documentElement;
       const max = doc.scrollHeight - doc.clientHeight;
       const p = max > 0 ? window.scrollY / max : 0;
-      progressBar.style.width = `${Math.max(0, Math.min(1, p)) * 100}%`;
+      progressBar.style.width = Math.max(0, Math.min(1, p)) * 100 + "%";
     }
 
-    // Expose for Lenis scroll hook
     window.__atUpdateChrome = updateChrome;
     updateChrome();
     window.addEventListener("resize", updateChrome, { passive: true });
@@ -256,52 +329,42 @@
     );
   }
 
-  async function maybeLoadInternal() {
-    const section = document.getElementById("internal");
-    const mdPath = "_local/ActivityTracker-Demo-Webpage.md";
-    const markedPath = "vendor/marked.min.js";
-
-    async function exists(url) {
-      try {
-        const res = await fetch(url, { method: "HEAD" });
-        return res.ok;
-      } catch {
-        return false;
-      }
-    }
-
-    const [hasMd, hasMarked] = await Promise.all([exists(mdPath), exists(markedPath)]);
-    if (!hasMd || !hasMarked) return;
-
-    let mdText;
-    try {
-      const res = await fetch(mdPath);
-      if (!res.ok) return;
-      mdText = await res.text();
-      if (!mdText || mdText.trim().length < 20) return;
-    } catch {
-      return;
-    }
-
-    await new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = markedPath;
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.appendChild(script);
-    }).catch(() => null);
-
-    if (!window.marked || typeof window.marked.parse !== "function") return;
-
-    section.classList.add("is-visible");
-    document.getElementById("internal-md").innerHTML = window.marked.parse(mdText);
+  function showError(message) {
+    const root = document.getElementById("demo-root");
+    if (!root) return;
+    root.appendChild(
+      el("div", { className: "demo-error", role: "alert" }, [
+        el("p", { text: message }),
+      ])
+    );
   }
 
-  mountDemo();
-  mountResources();
-  mountStepNav();
-  initStepBar();
-  const hasLenis = initLenis();
-  if (!hasLenis) initProgressFallback();
-  maybeLoadInternal();
+  function boot(parsed) {
+    data = parsed;
+    mountHero();
+    mountDemo();
+    mountResources();
+    mountStepNav();
+    initStepBar();
+    const hasLenis = initLenis();
+    if (!hasLenis) initProgressFallback();
+  }
+
+  async function loadDemo() {
+    if (typeof DemoMD === "undefined" || typeof DemoMD.parseContentMd !== "function") {
+      showError("Demo parser failed to load.");
+      return;
+    }
+    try {
+      const res = await fetch("content.md", { cache: "no-cache" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const raw = await res.text();
+      boot(DemoMD.parseContentMd(raw));
+    } catch (err) {
+      console.error(err);
+      showError("Could not load content.md for this demo.");
+    }
+  }
+
+  loadDemo();
 })();

@@ -1,9 +1,3 @@
-# Local-only (not for public GitHub Pages)
-_local/
-vendor/marked*.js
-vendor/marked*.mjs
-vendor/marked*.cjs
-
 # Node
 node_modules/
 package-lock.json

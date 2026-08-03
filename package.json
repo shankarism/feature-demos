@@ -1,10 +1,9 @@
 {
-  "name": "activity-tracker-demo",
+  "name": "feature-demos",
   "version": "1.0.0",
   "private": true,
-  "description": "Sitetracker Activity Tracker customer demo & onboarding page",
+  "description": "Sitetracker feature demo and onboarding pages (Markdown-driven)",
   "scripts": {
-    "setup": "node scripts/setup.js",
     "dev": "node scripts/dev.js",
     "start": "node scripts/dev.js"
   }

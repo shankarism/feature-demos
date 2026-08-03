@@ -1,23 +1,13 @@
 #!/usr/bin/env node
 /**
- * Local review server. Runs setup (marked), then serves the site.
- * Internal tab appears only when _local/*.md + vendor/marked.min.js exist.
+ * Local review server for the static demo site.
  */
-const { spawnSync } = require('child_process');
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
 const PORT = Number(process.env.PORT) || 5173;
-
-const setup = spawnSync(process.execPath, [path.join(__dirname, 'setup.js')], {
-  cwd: ROOT,
-  stdio: 'inherit',
-});
-if (setup.status !== 0) {
-  console.warn('Setup failed (marked may be missing). Internal tab will stay hidden.');
-}
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -33,8 +23,8 @@ const MIME = {
   '.woff2': 'font/woff2',
   '.mp4': 'video/mp4',
   '.webm': 'video/webm',
-  '.md': 'text/markdown; charset=utf-8',
   '.json': 'application/json',
+  '.md': 'text/markdown; charset=utf-8',
   '.ico': 'image/x-icon',
 };
 
@@ -90,7 +80,7 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-  const url = `http://127.0.0.1:${PORT}/`;
-  console.log(`\nActivity Tracker demo → ${url}`);
+  console.log(`\nFeature demos → http://127.0.0.1:${PORT}/`);
+  console.log(`Activity Tracker → http://127.0.0.1:${PORT}/demos/activity-tracker/`);
   console.log('Press Ctrl+C to stop.\n');
 });
