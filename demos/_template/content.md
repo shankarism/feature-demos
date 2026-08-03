@@ -1,10 +1,12 @@
 ---
+title: My Feature
 headline: Your feature headline goes here
 lead: One short sentence explaining what this demo covers.
 preparedBy: Your Name
 email: you@sitetracker.com
 preparedFor: Customers
 preparedOn: August 3, 2026
+order: 10
 ---
 
 # Overview
@@ -13,7 +15,7 @@ Section intro text. This becomes the full-width block under the step title.
 
 ## First video title
 time: 45-60s
-video: demo-00-overview.mp4
+video: https://www.loom.com/share/PASTE_LOOM_ID_HERE
 
 - What viewers will learn from this clip
 - Second learning point

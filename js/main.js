@@ -24,7 +24,25 @@
     return "videos/" + file;
   }
 
-  function videoFrame(video) {
+  function loomFrame(video) {
+    const title = video.title ? video.title + " (Loom)" : "Loom video";
+    return el("div", { className: "video-frame has-video has-loom" }, [
+      el("iframe", {
+        className: "video-frame__loom",
+        src: video.embedUrl,
+        title: title,
+        allow:
+          "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
+        allowfullscreen: true,
+        frameborder: "0",
+        loading: "lazy",
+        webkitallowfullscreen: true,
+        mozallowfullscreen: true,
+      }),
+    ]);
+  }
+
+  function fileFrame(video) {
     const path = videoPath(video);
     const frame = el("div", { className: "video-frame", "data-src": path }, [
       el("video", {
@@ -36,9 +54,14 @@
       el("div", { className: "video-frame__placeholder" }, [
         el("div", { className: "video-frame__play", "aria-hidden": "true" }),
         el("p", { className: "video-frame__soon", text: "Video coming soon" }),
-        el("p", { className: "video-frame__file", text: path }),
+        el("p", {
+          className: "video-frame__file",
+          text: video.file ? path : "Add an MP4 or a Loom link in content.md",
+        }),
       ]),
     ]);
+
+    if (!video.file) return frame;
 
     fetch(path, { method: "HEAD" })
       .then((res) => {
@@ -52,6 +75,11 @@
       .catch(() => {});
 
     return frame;
+  }
+
+  function videoFrame(video) {
+    if (video.kind === "loom" && video.embedUrl) return loomFrame(video);
+    return fileFrame(video);
   }
 
   function videoCopy(video) {

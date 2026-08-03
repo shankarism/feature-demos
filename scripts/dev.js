@@ -9,6 +9,12 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..');
 const PORT = Number(process.env.PORT) || 5173;
 
+try {
+  require('./generate-manifest').generate();
+} catch (err) {
+  console.warn('Could not regenerate demos/manifest.json:', err.message);
+}
+
 const MIME = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',

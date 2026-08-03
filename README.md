@@ -5,21 +5,46 @@ Static Sitetracker-branded demo / onboarding pages. Shared chrome lives at the r
 **Live URLs:**
 
 - Hub: [https://shankarism.github.io/feature-demos/](https://shankarism.github.io/feature-demos/)
-- Activity Tracker: [https://shankarism.github.io/feature-demos/demos/activity-tracker/](https://shankarism.github.io/feature-demos/demos/activity-tracker/)
-- Activity Based Scheduling: [https://shankarism.github.io/feature-demos/demos/activity-based-scheduling/](https://shankarism.github.io/feature-demos/demos/activity-based-scheduling/)
-- Risk Management: [https://shankarism.github.io/feature-demos/demos/risk-management/](https://shankarism.github.io/feature-demos/demos/risk-management/)
+- Demo pattern: `https://shankarism.github.io/feature-demos/demos/{folder-name}/`
 
 Folder name = URL slug. Use kebab-case (`activity-tracker`, not `Activity Tracker`).
 
-## Current demos
+## Add a new demo (designers)
 
-| Demo | Path | Videos folder |
-| --- | --- | --- |
-| Activity Tracker | `demos/activity-tracker/` | `at-demo-00` … `at-demo-08` |
-| Activity Based Scheduling | `demos/activity-based-scheduling/` | `abs-demo-00` … `abs-demo-05` |
-| Risk Management | `demos/risk-management/` | `risk-demo-00` … `risk-demo-05` |
+Do **not** edit root `css/`, `js/`, `assets/`, or `demos/manifest.json`. The hub list is generated automatically.
 
-Drop matching `.mp4` files into each demo’s `videos/` folder when ready. Until then, the page shows placeholders.
+1. Create a folder and add markdown:
+
+   ```bash
+   mkdir -p demos/my-feature-name/videos
+   # easiest: start from the template
+   cp -R demos/_template demos/my-feature-name
+   ```
+
+2. Edit only `demos/my-feature-name/content.md`.
+
+3. For each clip, set `video:` to either:
+   - a **Loom** share/embed URL, or
+   - an **MP4 filename** that you put in `demos/my-feature-name/videos/`
+
+4. Push. GitHub Actions regenerates the hub manifest; Pages serves `/demos/my-feature-name/`.
+
+If `index.html` is missing in your folder, the generate script copies it from `_template` for you.
+
+## Videos: Loom or MP4
+
+```md
+## What is Activity Tracker?
+time: 45-60s
+video: https://www.loom.com/share/abc123def456
+
+## Create a Project Tracker
+time: 60-90s
+video: at-demo-01-create-tracker.mp4
+```
+
+- Loom → embedded player (no upload)
+- `.mp4` → file in that demo’s `videos/` folder; placeholder until the file exists
 
 ## Local review
 
@@ -27,47 +52,28 @@ Drop matching `.mp4` files into each demo’s `videos/` folder when ready. Until
 npm run dev
 ```
 
+This regenerates `demos/manifest.json` from every folder under `demos/` that has a `content.md`, then serves the site.
+
 - Hub: [http://127.0.0.1:5173/](http://127.0.0.1:5173/)
-- Activity Tracker: [http://127.0.0.1:5173/demos/activity-tracker/](http://127.0.0.1:5173/demos/activity-tracker/)
-- Activity Based Scheduling: [http://127.0.0.1:5173/demos/activity-based-scheduling/](http://127.0.0.1:5173/demos/activity-based-scheduling/)
-- Risk Management: [http://127.0.0.1:5173/demos/risk-management/](http://127.0.0.1:5173/demos/risk-management/)
 
-## Add a new demo (designers)
+Manual regenerate only:
 
-Do **not** edit root `css/`, `js/`, or `assets/` unless you are changing the shared template for everyone.
-
-1. Copy the starter folder:
-
-   ```bash
-   cp -R demos/_template demos/my-feature-name
-   ```
-
-2. Edit `demos/my-feature-name/content.md` (hero + sections + videos + resources).
-
-3. Drop video files into `demos/my-feature-name/videos/`. Filenames must match the `video:` lines in the markdown.
-
-4. Register the demo on the hub by appending to `demos/manifest.json`:
-
-   ```json
-   {
-     "slug": "my-feature-name",
-     "title": "My Feature",
-     "description": "One-line summary for the hub"
-   }
-   ```
-
-5. Push. Pages will serve `/demos/my-feature-name/`.
+```bash
+npm run manifest
+```
 
 ## `content.md` schema
 
 ```md
 ---
+title: Short hub title
 headline: Hero headline
 lead: Supporting sentence under the headline.
 preparedBy: Your Name
 email: you@sitetracker.com
 preparedFor: Customers
 preparedOn: August 3, 2026
+order: 10
 ---
 
 # Section title
@@ -76,7 +82,7 @@ Full-width section intro (step bar uses this title).
 
 ## Video title
 time: 45-60s
-video: demo-00-overview.mp4
+video: https://www.loom.com/share/...
 
 - What this video will show you
 - Second learning point
@@ -90,30 +96,29 @@ video: demo-00-overview.mp4
 Rules:
 
 - `#` = section (appears in the glass step bar)
-- `##` = video row; optional `time:` and `video:` lines; bullets = “You’ll learn”
+- `##` = video row; optional `time:` and `video:` (Loom URL or MP4 name); bullets = “You’ll learn”
 - `# Resources` = optional link list at the bottom
-- Videos live only in that demo’s `videos/` folder
+- `title` / `lead` / `order` drive the hub card (order is optional; lower comes first)
+- Folders starting with `_` (like `_template`) are ignored by the hub
 
 ## Layout
 
 ```
 /
-  index.html              Hub (reads demos/manifest.json)
+  index.html              Hub (reads generated demos/manifest.json)
   css/ js/ vendor/ assets/ fonts/   Shared chrome — leave alone
+  scripts/generate-manifest.js      Builds the hub list from folders
   demos/
-    manifest.json         Hub listing
+    manifest.json         Auto-generated — do not edit by hand
     _template/            Copy this to start a demo
-    activity-tracker/
-    activity-based-scheduling/
-    risk-management/
-      index.html          Thin shell (same in every demo)
-      content.md          All copy lives here
-      videos/             MP4s for this demo only
+    my-feature-name/
+      index.html          Thin shell (auto-copied if missing)
+      content.md          All copy + Loom/MP4 references
+      videos/             Optional MP4s for this demo
 ```
 
 ## Stack
 
-- Zero build: the browser loads `content.md` and renders the page
-- Lenis smooth scroll (`vendor/lenis.min.js`)
-- Self-hosted Barlow
-- GitHub Pages (static only)
+- Zero app build: the browser loads `content.md` and renders the page
+- Hub manifest: Node script + GitHub Action (static hosting cannot list folders)
+- Lenis smooth scroll, self-hosted Barlow, GitHub Pages

@@ -5,6 +5,8 @@
   "description": "Sitetracker feature demo and onboarding pages (Markdown-driven)",
   "scripts": {
     "dev": "node scripts/dev.js",
-    "start": "node scripts/dev.js"
+    "start": "node scripts/dev.js",
+    "manifest": "node scripts/generate-manifest.js",
+    "build": "node scripts/generate-manifest.js"
   }
 }

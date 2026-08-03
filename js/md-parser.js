@@ -8,6 +8,7 @@
  *   ## Video title           → video row
  *   time: 45-60s
  *   video: file.mp4
+ *   video: https://www.loom.com/share/...
  *   - learn bullets
  *   # Resources              → resource links
  *   - [Label](url) — display
@@ -23,9 +24,28 @@
       || "section";
   }
 
-  function videoIdFromFile(file, title) {
-    if (file) {
-      return String(file)
+  /** @returns {{ kind: 'loom', id: string, embedUrl: string, shareUrl: string } | null} */
+  function parseLoom(value) {
+    const raw = String(value || "").trim();
+    if (!raw) return null;
+    const m = raw.match(
+      /(?:https?:\/\/)?(?:www\.)?loom\.com\/(?:share|embed)\/([a-zA-Z0-9]+)/i
+    );
+    if (!m) return null;
+    const id = m[1];
+    return {
+      kind: "loom",
+      id,
+      embedUrl: "https://www.loom.com/embed/" + id,
+      shareUrl: "https://www.loom.com/share/" + id,
+    };
+  }
+
+  function videoIdFromSource(source, title) {
+    const loom = parseLoom(source);
+    if (loom) return "loom-" + loom.id;
+    if (source && !/^https?:\/\//i.test(source)) {
+      return String(source)
         .replace(/\.(mp4|webm|mov)$/i, "")
         .replace(/[^a-zA-Z0-9._-]+/g, "-");
     }
@@ -91,7 +111,18 @@
     function flushVideo() {
       if (!section || !video) return;
       if (!video.title) return;
-      video.id = uniqueId(videoIdFromFile(video.file, video.title));
+      const loom = parseLoom(video.source);
+      if (loom) {
+        video.kind = "loom";
+        video.loomId = loom.id;
+        video.embedUrl = loom.embedUrl;
+        video.file = "";
+      } else {
+        video.kind = "file";
+        video.file = video.source || "";
+      }
+      video.id = uniqueId(videoIdFromSource(video.source, video.title));
+      delete video.source;
       section.videos.push(video);
       video = null;
     }
@@ -137,6 +168,8 @@
         video = {
           title: trimmed.replace(/^##\s+/, "").trim(),
           time: "",
+          source: "",
+          kind: "file",
           file: "",
           learn: [],
         };
@@ -151,7 +184,7 @@
         }
         const videoMatch = trimmed.match(/^video:\s*(.+)$/i);
         if (videoMatch) {
-          video.file = videoMatch[1].trim();
+          video.source = videoMatch[1].trim();
           continue;
         }
         const bullet = trimmed.match(/^[-*]\s+(.+)$/);
@@ -163,7 +196,6 @@
         continue;
       }
 
-      // Section subtext: first non-empty paragraph before any ##
       if (!trimmed) continue;
       if (!section.subtext) section.subtext = trimmed;
       else section.subtext += " " + trimmed;
@@ -185,10 +217,11 @@
       preparedOn: meta.preparedOn || "",
       title: meta.title || meta.headline || "Demo",
       description: meta.description || meta.lead || "",
+      order: meta.order || "",
       sections,
       resources,
     };
   }
 
-  global.DemoMD = { parseContentMd, slugify };
+  global.DemoMD = { parseContentMd, parseLoom, slugify };
 })(typeof window !== "undefined" ? window : globalThis);

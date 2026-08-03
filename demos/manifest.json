@@ -2,16 +2,16 @@
   {
     "slug": "activity-tracker",
     "title": "Activity Tracker",
-    "description": "Track activities across multiple projects in one grid"
+    "description": "Convert a Project Tracker into an Activity Tracker to see Enhanced Activity fields grouped by Activity Template - with inline edit, filtering, and export."
   },
   {
     "slug": "activity-based-scheduling",
     "title": "Activity Based Scheduling",
-    "description": "Build schedules from activities, not guesswork"
+    "description": "Activity Based Scheduling turns Enhanced Activities into a living project schedule - with dependencies, dates, and progress tied to the work itself."
   },
   {
     "slug": "risk-management",
     "title": "Risk Management",
-    "description": "Capture, track, and close risks in one place"
+    "description": "Sitetracker Risk Management helps teams log risks early, keep owners and scores current, and turn mitigation into visible follow-through."
   }
 ]

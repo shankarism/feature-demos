@@ -1,0 +1,30 @@
+name: Generate hub manifest
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "demos/**"
+      - "!demos/manifest.json"
+      - "scripts/generate-manifest.js"
+
+permissions:
+  contents: write
+
+jobs:
+  manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate demos/manifest.json
+        run: node scripts/generate-manifest.js
+
+      - name: Commit manifest if changed
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: regenerate demos hub manifest"
+          file_pattern: demos/manifest.json demos/*/index.html
+          skip_dirty_check: false
