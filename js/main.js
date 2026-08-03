@@ -143,7 +143,7 @@
 
     const featureName =
       sentenceCaseFromSlug(featureSlugFromPath()) || data.title || data.headline || "Demo";
-    document.title = featureName;
+    document.title = "Sitetracker | Demo | " + featureName;
     if (data.description || data.lead) {
       const meta = document.querySelector('meta[name="description"]');
       if (meta) meta.setAttribute("content", data.description || data.lead);
@@ -283,12 +283,11 @@
       if (open) {
         menu.hidden = false;
         openScrollY = window.scrollY || window.pageYOffset || 0;
+        // Sync open — avoid an extra frame of delay
+        void menu.offsetHeight;
+        chrome.classList.add("is-menu-open");
         document.body.classList.add("toc-open");
         toggle.setAttribute("aria-expanded", "true");
-        // Next frame so grid/opacity transitions run from the collapsed state
-        requestAnimationFrame(() => {
-          chrome.classList.add("is-menu-open");
-        });
       } else {
         toggle.setAttribute("aria-expanded", "false");
         chrome.classList.remove("is-menu-open");
@@ -296,7 +295,7 @@
         menuCloseTimer = setTimeout(() => {
           if (!isMenuOpen()) menu.hidden = true;
           menuCloseTimer = null;
-        }, 320);
+        }, 160);
       }
     }
 
