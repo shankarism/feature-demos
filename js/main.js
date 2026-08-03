@@ -114,6 +114,24 @@
     ]);
   }
 
+  function featureSlugFromPath() {
+    const parts = location.pathname.replace(/\/+$/, "").split("/").filter(Boolean);
+    const slug = parts[parts.length - 1] || "";
+    if (!slug || slug === "demos" || slug === "index.html") return "";
+    return slug;
+  }
+
+  /** activity-based-scheduling → Activity based scheduling */
+  function sentenceCaseFromSlug(slug) {
+    const words = String(slug || "")
+      .split("-")
+      .filter(Boolean)
+      .map((w) => w.toLowerCase());
+    if (!words.length) return "";
+    words[0] = words[0].charAt(0).toUpperCase() + words[0].slice(1);
+    return words.join(" ");
+  }
+
   function mountHero() {
     const headline = document.getElementById("hero-headline");
     const lead = document.getElementById("hero-lead");
@@ -123,9 +141,9 @@
       lead.hidden = !data.lead;
     }
 
-    if (data.headline || data.title) {
-      document.title = (data.headline || data.title) + " - Sitetracker Demo";
-    }
+    const featureName =
+      sentenceCaseFromSlug(featureSlugFromPath()) || data.title || data.headline || "Demo";
+    document.title = featureName;
     if (data.description || data.lead) {
       const meta = document.querySelector('meta[name="description"]');
       if (meta) meta.setAttribute("content", data.description || data.lead);
@@ -240,30 +258,78 @@
 
     if (!chrome || !sections.length) return;
 
+    let menuCloseTimer = null;
+    let openScrollY = 0;
+
+    let backdrop = document.getElementById("toc-backdrop");
+    if (!backdrop) {
+      backdrop = document.createElement("div");
+      backdrop.id = "toc-backdrop";
+      backdrop.className = "toc-backdrop";
+      backdrop.setAttribute("aria-hidden", "true");
+      document.body.appendChild(backdrop);
+    }
+
+    function isMenuOpen() {
+      return toggle.getAttribute("aria-expanded") === "true";
+    }
+
     function setMenuOpen(open) {
-      toggle.setAttribute("aria-expanded", open ? "true" : "false");
-      chrome.classList.toggle("is-menu-open", open);
-      if (open) menu.removeAttribute("hidden");
-      else menu.setAttribute("hidden", "");
+      if (menuCloseTimer) {
+        clearTimeout(menuCloseTimer);
+        menuCloseTimer = null;
+      }
+
+      if (open) {
+        menu.hidden = false;
+        openScrollY = window.scrollY || window.pageYOffset || 0;
+        document.body.classList.add("toc-open");
+        toggle.setAttribute("aria-expanded", "true");
+        // Next frame so grid/opacity transitions run from the collapsed state
+        requestAnimationFrame(() => {
+          chrome.classList.add("is-menu-open");
+        });
+      } else {
+        toggle.setAttribute("aria-expanded", "false");
+        chrome.classList.remove("is-menu-open");
+        document.body.classList.remove("toc-open");
+        menuCloseTimer = setTimeout(() => {
+          if (!isMenuOpen()) menu.hidden = true;
+          menuCloseTimer = null;
+        }, 320);
+      }
     }
 
     function closeMenu() {
+      if (!isMenuOpen()) return;
       setMenuOpen(false);
     }
 
     toggle.addEventListener("click", (e) => {
       e.stopPropagation();
-      const open = toggle.getAttribute("aria-expanded") === "true";
-      setMenuOpen(!open);
+      setMenuOpen(!isMenuOpen());
     });
 
+    backdrop.addEventListener("click", closeMenu);
+
     document.addEventListener("click", (e) => {
-      if (!chrome.contains(e.target)) closeMenu();
+      if (!isMenuOpen()) return;
+      if (chrome.contains(e.target) || backdrop.contains(e.target)) return;
+      closeMenu();
     });
 
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") closeMenu();
     });
+
+    function closeMenuIfScrollOutsideToc(e) {
+      if (!isMenuOpen()) return;
+      if (menu.contains(e.target)) return;
+      closeMenu();
+    }
+
+    window.addEventListener("wheel", closeMenuIfScrollOutsideToc, { passive: true });
+    window.addEventListener("touchmove", closeMenuIfScrollOutsideToc, { passive: true });
 
     links.forEach((link) => {
       link.addEventListener("click", (e) => {
@@ -276,6 +342,11 @@
     });
 
     function updateChrome() {
+      if (isMenuOpen()) {
+        const y = window.scrollY || window.pageYOffset || 0;
+        if (Math.abs(y - openScrollY) > 4) closeMenu();
+      }
+
       const titles = sections.map((section) => ({
         section,
         title: section.querySelector(".demo-section__title"),

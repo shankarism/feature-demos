@@ -182,7 +182,7 @@ a:hover {
   border-right: 1.5px solid var(--slate-80);
   border-bottom: 1.5px solid var(--slate-80);
   transform: rotate(45deg);
-  transition: transform 0.2s ease;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
   flex-shrink: 0;
   margin-top: -0.2rem;
 }
@@ -192,11 +192,33 @@ a:hover {
   margin-top: 0.15rem;
 }
 
+.chrome.is-visible.is-menu-open .chrome__panel {
+  max-height: min(75vh, 36rem);
+}
+
 .step-bar__menu {
   border-top: 1px solid rgba(34, 51, 59, 0.06);
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(16px) saturate(1.2);
   -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.28s ease;
+  pointer-events: none;
+}
+
+.chrome.is-menu-open .step-bar__menu {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.step-bar__menu-inner {
+  overflow: hidden;
+  min-height: 0;
 }
 
 .step-bar__nav {
@@ -205,6 +227,9 @@ a:hover {
   padding: 0.4rem var(--page-pad) 0.75rem;
   display: grid;
   gap: 0.15rem;
+  max-height: min(55vh, 24rem);
+  overflow: auto;
+  overscroll-behavior: contain;
 }
 
 .step-bar__link {
@@ -215,6 +240,9 @@ a:hover {
   font-weight: 500;
   font-size: 0.95rem;
   color: var(--slate-80);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .step-bar__link:hover {
@@ -226,6 +254,28 @@ a:hover {
   color: var(--slate-100);
   font-weight: 600;
   background: rgba(100, 200, 189, 0.18);
+}
+
+/* Page blur while ToC is open */
+.toc-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(34, 51, 59, 0.18);
+  backdrop-filter: blur(8px) saturate(1.05);
+  -webkit-backdrop-filter: blur(8px) saturate(1.05);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
+}
+
+body.toc-open .toc-backdrop {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 
 .progress {
