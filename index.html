@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Activity Tracker - Sitetracker Demo and Onboarding</title>
+    <meta
+      name="description"
+      content="Customer demo and onboarding for Sitetracker Enhanced Activity Tracker. Convert a Project Tracker into an Activity Tracker and walk through create, convert, use, and refine."
+    />
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png" />
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="vendor/lenis.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="chrome" id="chrome">
+      <div class="chrome__panel" id="chrome-panel">
+        <div class="step-bar" id="step-bar">
+          <button
+            type="button"
+            class="step-bar__toggle"
+            id="step-bar-toggle"
+            aria-expanded="false"
+            aria-controls="step-bar-menu"
+          >
+            <span class="step-bar__label" id="step-bar-label">Overview</span>
+            <span class="step-bar__chevron" aria-hidden="true"></span>
+          </button>
+          <div class="step-bar__menu" id="step-bar-menu" hidden>
+            <nav class="step-bar__nav" id="step-bar-nav" aria-label="Demo steps"></nav>
+          </div>
+        </div>
+      </div>
+      <div class="progress" aria-hidden="true">
+        <div class="progress__bar" id="progress-bar"></div>
+      </div>
+    </div>
+
+    <div class="page">
+      <header class="hero" id="top">
+        <a class="hero__logo" href="#top">
+          <img src="assets/logo.svg" alt="Sitetracker" width="220" height="20" />
+        </a>
+        <h1>Track activities across multiple projects in one grid</h1>
+        <p class="hero__lead">
+          Convert a Project Tracker into an Activity Tracker to see Enhanced Activity fields
+          grouped by Activity Template - with inline edit, filtering, and export.
+        </p>
+        <p class="hero__scroll"><span>Scroll down to see the demo</span></p>
+      </header>
+
+      <main id="main">
+        <div id="demo-root"></div>
+
+        <section class="resources" id="resources" aria-labelledby="resources-title">
+          <h2 id="resources-title">Resources</h2>
+          <ul class="resource-list" id="resource-list"></ul>
+        </section>
+
+        <section id="internal" aria-label="Internal briefing">
+          <div class="internal-banner">
+            Local only - visible via <code>npm run dev</code> when
+            <code>_local/ActivityTracker-Demo-Webpage.md</code> and
+            <code>vendor/marked.min.js</code> exist.
+          </div>
+          <div class="internal-md" id="internal-md"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="vendor/lenis.min.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
