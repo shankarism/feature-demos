@@ -2,12 +2,24 @@
 
 Static Sitetracker-branded demo / onboarding pages. Shared chrome lives at the repo root; each feature is a folder under `demos/`.
 
-**Live URLs (after rename to `feature-demos`):**
+**Live URLs:**
 
-- Hub: `https://shankarism.github.io/feature-demos/`
-- Demo: `https://shankarism.github.io/feature-demos/demos/{folder-name}/`
+- Hub: [https://shankarism.github.io/feature-demos/](https://shankarism.github.io/feature-demos/)
+- Activity Tracker: [https://shankarism.github.io/feature-demos/demos/activity-tracker/](https://shankarism.github.io/feature-demos/demos/activity-tracker/)
+- Activity Based Scheduling: [https://shankarism.github.io/feature-demos/demos/activity-based-scheduling/](https://shankarism.github.io/feature-demos/demos/activity-based-scheduling/)
+- Risk Management: [https://shankarism.github.io/feature-demos/demos/risk-management/](https://shankarism.github.io/feature-demos/demos/risk-management/)
 
 Folder name = URL slug. Use kebab-case (`activity-tracker`, not `Activity Tracker`).
+
+## Current demos
+
+| Demo | Path | Videos folder |
+| --- | --- | --- |
+| Activity Tracker | `demos/activity-tracker/` | `at-demo-00` … `at-demo-08` |
+| Activity Based Scheduling | `demos/activity-based-scheduling/` | `abs-demo-00` … `abs-demo-05` |
+| Risk Management | `demos/risk-management/` | `risk-demo-00` … `risk-demo-05` |
+
+Drop matching `.mp4` files into each demo’s `videos/` folder when ready. Until then, the page shows placeholders.
 
 ## Local review
 
@@ -17,6 +29,8 @@ npm run dev
 
 - Hub: [http://127.0.0.1:5173/](http://127.0.0.1:5173/)
 - Activity Tracker: [http://127.0.0.1:5173/demos/activity-tracker/](http://127.0.0.1:5173/demos/activity-tracker/)
+- Activity Based Scheduling: [http://127.0.0.1:5173/demos/activity-based-scheduling/](http://127.0.0.1:5173/demos/activity-based-scheduling/)
+- Risk Management: [http://127.0.0.1:5173/demos/risk-management/](http://127.0.0.1:5173/demos/risk-management/)
 
 ## Add a new demo (designers)
 
@@ -89,7 +103,9 @@ Rules:
   demos/
     manifest.json         Hub listing
     _template/            Copy this to start a demo
-    activity-tracker/     Example demo
+    activity-tracker/
+    activity-based-scheduling/
+    risk-management/
       index.html          Thin shell (same in every demo)
       content.md          All copy lives here
       videos/             MP4s for this demo only

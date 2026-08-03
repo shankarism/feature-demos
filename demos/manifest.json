@@ -3,5 +3,15 @@
     "slug": "activity-tracker",
     "title": "Activity Tracker",
     "description": "Track activities across multiple projects in one grid"
+  },
+  {
+    "slug": "activity-based-scheduling",
+    "title": "Activity Based Scheduling",
+    "description": "Build schedules from activities, not guesswork"
+  },
+  {
+    "slug": "risk-management",
+    "title": "Risk Management",
+    "description": "Capture, track, and close risks in one place"
   }
 ]

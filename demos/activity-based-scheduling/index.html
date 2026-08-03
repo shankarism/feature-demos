@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Demo - Sitetracker</title>
+    <meta name="description" content="Sitetracker feature demo and onboarding." />
+    <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon.png" />
+    <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png" />
+    <link rel="stylesheet" href="../../css/styles.css" />
+    <link rel="stylesheet" href="../../vendor/lenis.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="chrome" id="chrome">
+      <div class="chrome__panel" id="chrome-panel">
+        <div class="step-bar" id="step-bar">
+          <button
+            type="button"
+            class="step-bar__toggle"
+            id="step-bar-toggle"
+            aria-expanded="false"
+            aria-controls="step-bar-menu"
+          >
+            <span class="step-bar__label" id="step-bar-label">Overview</span>
+            <span class="step-bar__chevron" aria-hidden="true"></span>
+          </button>
+          <div class="step-bar__menu" id="step-bar-menu" hidden>
+            <nav class="step-bar__nav" id="step-bar-nav" aria-label="Demo steps"></nav>
+          </div>
+        </div>
+      </div>
+      <div class="progress" aria-hidden="true">
+        <div class="progress__bar" id="progress-bar"></div>
+      </div>
+    </div>
+
+    <div class="page">
+      <header class="hero" id="top">
+        <div class="hero__mark" aria-hidden="true">
+          <img src="../../assets/favicon.svg" alt="" />
+        </div>
+        <div class="hero__content">
+          <a class="hero__logo" href="../../">
+            <img src="../../assets/logo.svg" alt="Sitetracker" width="220" height="20" />
+          </a>
+          <h1 id="hero-headline"></h1>
+          <p class="hero__lead" id="hero-lead"></p>
+          <div class="hero__byline" id="hero-byline" hidden>
+            <div class="hero__byline-item" id="byline-by" hidden>
+              <span class="hero__byline-label">Prepared by</span>
+              <span class="hero__byline-value">
+                <span id="hero-prepared-by"></span>
+                <a
+                  class="hero__byline-mail"
+                  id="hero-email"
+                  href="#"
+                  hidden
+                  aria-label="Email"
+                >
+                  <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+                    <path
+                      fill="currentColor"
+                      d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"
+                    />
+                  </svg>
+                </a>
+              </span>
+            </div>
+            <div class="hero__byline-item" id="byline-for" hidden>
+              <span class="hero__byline-label">Prepared for</span>
+              <span class="hero__byline-value" id="hero-prepared-for"></span>
+            </div>
+            <div class="hero__byline-item" id="byline-on" hidden>
+              <span class="hero__byline-label">Prepared on</span>
+              <span class="hero__byline-value" id="hero-prepared-on"></span>
+            </div>
+          </div>
+        </div>
+        <p class="hero__scroll"><span>Scroll down to see the demo</span></p>
+      </header>
+
+      <main id="main">
+        <div id="demo-root"></div>
+
+        <section class="resources" id="resources" aria-labelledby="resources-title" hidden>
+          <h2 id="resources-title">Resources</h2>
+          <ul class="resource-list" id="resource-list"></ul>
+        </section>
+      </main>
+    </div>
+
+    <script src="../../vendor/lenis.min.js"></script>
+    <script src="../../js/md-parser.js"></script>
+    <script src="../../js/main.js"></script>
+  </body>
+</html>
