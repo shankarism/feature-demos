@@ -34,7 +34,12 @@
         const href = "demos/" + demo.slug + "/";
         list.appendChild(
           el("li", { className: "hub__item" }, [
-            el("a", { className: "hub__card", href: href }, [
+            el("a", {
+              className: "hub__card",
+              href: href,
+              target: "_blank",
+              rel: "noopener noreferrer",
+            }, [
               el("span", { className: "hub__card-title", text: demo.title || demo.slug }),
               demo.description
                 ? el("span", { className: "hub__card-desc", text: demo.description })
